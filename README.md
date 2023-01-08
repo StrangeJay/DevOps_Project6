@@ -20,6 +20,20 @@ Three-tier Architecture is a client-server software architecture pattern that co
 1. **Presentation Layer (PL):** This is the user interface such as the client server or browser on your laptop.  
 2. **Business Layer (BL):** This is the backend program that implements business logic. Application or Webserver  
 3. **Data Access or Management Layer (DAL):** This is the layer for computer data storage and data access. [Database Server](https://www.computerhope.com/jargon/d/database-server.htm) or File System Server such as [FTP server](https://titanftp.com/2018/09/11/what-is-an-ftp-server/), or [NFS Server](https://searchenterprisedesktop.techtarget.com/definition/Network-File-System).  
+In this project, you will have the hands-on experience that showcases **Three-tier Architecture** while also ensuring that the disk used to store files on the Linux servers are adequately partitioned and managed through programs such as $\color{pink}{gdisk}$ and $\color{pink}{LVM}$ respectively.
+You will be working working with several storage and disk management concepts, to have a better understanding, watch following video:  
+[Disk management in Linux](https://darey.io/courses/step-12-logical-volume-management/lessons/lesson-1-storage-management/topic/create-linux-partitions-with-fdisk/)  
+
+> **Note** We are gradually introducing new AWS elements into our solutions, but do not be worried if you do not fully understand AWS Cloud Services yet, there are Cloud focused projects ahead where we will get into deep details of various Cloud concepts and technologies – not only AWS, but other Cloud Service Providers as well.  
+
+#Your 3-Tier Setup  
+1. A Laptop or PC to serve as a client
+2. An EC2 Linux Server as a web server (This is where you will install WordPress)
+3. An EC2 Linux server as a database (DB) server  
+
+Use $\color{pink}{RedHat}$ OS for this project  
+
+
 
 
 
