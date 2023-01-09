@@ -235,9 +235,20 @@ The UUID of the device will be used to update the /etc/fstab file;
 
 > sudo systemctl restart mysqld  
 > sudo systemctl enable mysqld  
+
 ![Screenshot_20230109_122342](https://user-images.githubusercontent.com/105195327/211297479-dda305a5-3518-4c95-bfba-05c7ab5a8e9e.png)   
 --- 
 ### Step 5 — Configure DB to work with WordPress
+> sudo mysql  
+> CREATE DATABASE wordpress;  
+> CREATE USER `myuser`@`<Web-Server-Private-IP-Address>` IDENTIFIED BY 'mypass';  
+> GRANT ALL ON wordpress.* TO 'myuser'@'<Web-Server-Private-IP-Address>';  
+> FLUSH PRIVILEGES;  
+> SHOW DATABASES;  
+> exit  
+--- 
+### Step 6 — Configure WordPress to connect to the remote database 
+
 
 
 
