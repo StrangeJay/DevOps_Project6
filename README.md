@@ -26,16 +26,87 @@ You will be working working with several storage and disk management concepts, t
 
 > **Note** We are gradually introducing new AWS elements into our solutions, but do not be worried if you do not fully understand AWS Cloud Services yet, there are Cloud focused projects ahead where we will get into deep details of various Cloud concepts and technologies – not only AWS, but other Cloud Service Providers as well.  
 
-#Your 3-Tier Setup  
+## Your 3-Tier Setup  
 1. A Laptop or PC to serve as a client
 2. An EC2 Linux Server as a web server (This is where you will install WordPress)
 3. An EC2 Linux server as a database (DB) server  
 
 Use $\color{pink}{RedHat}$ OS for this project  
 
+If uou've forgotten how to spin an EC2 instance, please refer to [Project 2](https://github.com/StrangeJay/DevOps-Project2). 
+
+In previous projects we used ‘Ubuntu’, but it is better to be well-versed with various Linux distributions, thus, for this projects we will use very popular distribution called ‘RedHat’ (it also has a fully compatible derivative – CentOS)
+> **Note** for Ubuntu server, when connecting to it via SSH/Putty or any other tool, we used $\color{pink}{ubuntu}$ user, but for RedHat you will need to use $\color{pink}{ec2-user}$ user. Connection string will look like $\color{pink}{ec2-user@<Public-IP>}$
+Let us get started!  
+---
+## LAUNCH AN EC2 INSTANCE THAT WILL SERVE AS “WEB SERVER” 
+
+### Step 1 - Prepare a web server 
+  
+- Launch an EC2 instance that will serve as "Web server". Create 3 volumes in the smae AZ as your Web Server EC2, each of 10GB.  
+  
+Learn How to add an EBS volume to an EC2 instance [here](https://www.youtube.com/watch?v=HPXnXkBzIHw)   
+  
+- Attach all three volumes one by one to your Web Server EC2 instance  
+https://user-images.githubusercontent.com/105195327/211216013-97e0006b-8867-4328-bd86-b2b6bbb9a391.mp4   
+
+- Open up the Linux terminal to begin configuration  
+- Use lsblk command to inspect what block devices are attached to the server. 
+ ![Screenshot_20230108_211409](https://user-images.githubusercontent.com/105195327/211217066-073f89f8-d9a8-4fde-8488-cfa9856709e0.png)  
+  
+ Notice names of your newly created devices. All devices in Linux reside in /dev/ directory. Inspect it with ls /dev/ and make sure you see all 3 newly created block devices there – their names will likely be $\color{pink}{xvdf\, xvdh\, xvdg}$.  
+  ![Screenshot 2023-01-08 211523](https://user-images.githubusercontent.com/105195327/211217224-61ea2d8e-c1fd-4394-ae58-9343e1710f01.png)  
+
+- Use `df -h` command to see all mounts and free space on your server  
+ ![Screenshot_20230108_211932](https://user-images.githubusercontent.com/105195327/211217234-db369948-09a5-4f72-b99b-90446162fcca.png)  
 
 
+- Use $\color{pink}{gdisk} utility to create a single partition on each of the 3 disks  
+ `sudo gdisk /dev/xvdf`   
+  
+![partition table](https://user-images.githubusercontent.com/105195327/211217510-f8b1c189-a033-4587-9003-f96508bac232.png)   
 
+![create new partition](https://user-images.githubusercontent.com/105195327/211218379-48363c3d-8f51-4ebb-8b25-e57322cbad77.png)
+  
+![Screenshot_20230108_214612](https://user-images.githubusercontent.com/105195327/211218393-365aed60-2de5-4b49-9b1a-998c2b0e793c.png)
+
+  
+![partition contd](https://user-images.githubusercontent.com/105195327/211217516-2052bc6f-203f-49cc-928b-51d3842af50e.png)   
+  
+![Screenshot_20230108_212744](https://user-images.githubusercontent.com/105195327/211217535-ab1bbe84-6878-4b20-b791-1b2624ee7a3a.png)   
+
+*Now, do the same for the remaining disks $\color{pink}{xvdh}$ `sudo gdisk /dev/xvdh` and $\color{pink}{xvdg}$ `sudo gdisk /dev/xvdg`  
+
+- Use $\color{pink}{lsblk}$ utility to view the newly configured partition on each of the 3 disks.   
+![Screenshot_20230108_215255](https://user-images.githubusercontent.com/105195327/211218563-0579e37e-59c6-4874-9faa-403b3ba826f9.png)   
+
+- Install $\color{blue}{lvm2}$ package using `sudo yum install lvm2`. Run sudo lvmdiskscan command to check for available partitions.   
+  
+![Screenshot_20230108_215532](https://user-images.githubusercontent.com/105195327/211218651-ec07369d-f886-4d4d-8b63-020bdceaefe1.png)   
+
+> **Note**  Previously, in Ubuntu we used $\color{pink}{apt}$ command to install packages, in RedHat/CentOS a different package manager is used, so we shall use yum command instead.   
+  
+- Use $\color{pink}{pvcreate}$ utility to mark each of 3 disks as physical volumes (PVs) to be used by LVM.  
+> sudo pvcreate /dev/xvdf1  
+> sudo pvcreate /dev/xvdg1  
+> sudo pvcreate /dev/xvdh1  
+![Screenshot_20230108_220002](https://user-images.githubusercontent.com/105195327/211218824-e72e389d-e066-4616-88bc-b0edb05ac044.png)    
+  
+- Verify that your Physical volume has been created successfully by running $\color{pink}{sudo\ pvs}$  
+![Screenshot_20230108_220022](https://user-images.githubusercontent.com/105195327/211218843-30e830b2-7487-4a4b-909d-7c0047ba80b7.png)   
+
+- Use $\color{blue}{vgcreate}$ utility to add all 3 PVs to a volume group (VG). Name the VG **webdata-vg**   
+`sudo vgcreate webdata-vg /dev/xvdh1 /dev/xvdg1 /dev/xvdf1`  
+  
+- Verify that your VG has been created successfully by running $\color{pink}{sudo\ vgs}$  
+  
+
+
+  
+
+  
+  
+ 
 
 
 
