@@ -37,7 +37,7 @@ If uou've forgotten how to spin an EC2 instance, please refer to [Project 2](htt
 
 In previous projects we used ‘Ubuntu’, but it is better to be well-versed with various Linux distributions, thus, for this projects we will use very popular distribution called ‘RedHat’ (it also has a fully compatible derivative – CentOS)  
 
-**Note:** for Ubuntu server, when connecting to it via SSH/Putty or any other tool, we used $\color{pink}{ubuntu}$ user, but for RedHat you will need to use $\color{pink}{ec2-user}$ user. Connection string will look like `ec2-user@<Public-IP>`
+> **Note:** for Ubuntu server, when connecting to it via SSH/Putty or any other tool, we used $\color{pink}{ubuntu}$ user, but for RedHat you will need to use $\color{pink}{ec2-user}$ user. Connection string will look like `ec2-user@<Public-IP>`
 Let us get started!  
 ---
 ## LAUNCH AN EC2 INSTANCE THAT WILL SERVE AS “WEB SERVER” 
@@ -76,7 +76,7 @@ https://user-images.githubusercontent.com/105195327/211216013-97e0006b-8867-4328
   
 ![Screenshot_20230108_212744](https://user-images.githubusercontent.com/105195327/211217535-ab1bbe84-6878-4b20-b791-1b2624ee7a3a.png)   
 
-*Now, do the same for the remaining disks $\color{pink}{xvdh}$ `sudo gdisk /dev/xvdh` and $\color{pink}{xvdg}$ `sudo gdisk /dev/xvdg`  
+*Now, do the same for the remaining disks $\color{pink}{xvdh}$ `sudo gdisk /dev/xvdh` and $\color{pink}{xvdg}$ `sudo gdisk /dev/xvdg`*  
 
 - Use $\color{pink}{lsblk}$ utility to view the newly configured partition on each of the 3 disks.   
 ![Screenshot_20230108_215255](https://user-images.githubusercontent.com/105195327/211218563-0579e37e-59c6-4874-9faa-403b3ba826f9.png)   
@@ -91,25 +91,32 @@ https://user-images.githubusercontent.com/105195327/211216013-97e0006b-8867-4328
 > sudo pvcreate /dev/xvdf1  
 > sudo pvcreate /dev/xvdg1  
 > sudo pvcreate /dev/xvdh1  
+
 ![Screenshot_20230108_220002](https://user-images.githubusercontent.com/105195327/211218824-e72e389d-e066-4616-88bc-b0edb05ac044.png)    
   
 - Verify that your Physical volume has been created successfully by running $\color{pink}{sudo\ pvs}$  
+
 ![Screenshot_20230108_220022](https://user-images.githubusercontent.com/105195327/211218843-30e830b2-7487-4a4b-909d-7c0047ba80b7.png)   
 
 - Use $\color{blue}{vgcreate}$ utility to add all 3 PVs to a volume group (VG). Name the VG **webdata-vg**   
 > sudo vgcreate webdata-vg /dev/xvdh1 /dev/xvdg1 /dev/xvdf1   
   
 - Verify that your VG has been created successfully by running $\color{pink}{sudo\ vgs}$  
+
 ![Screenshot_20230109_092255](https://user-images.githubusercontent.com/105195327/211265844-775d7626-828f-44b6-b729-d9429e1aa6fc.png)   
 
 - Use $\color{blue}{lvcreate}$ utility to create 2 logical volumes. **apps-lv (Use half of the PV size)**, and **logs-lv Use the remaining space of the PV size.**  
+
 > **NOTE** apps-lv will be used to store data for the Website while, logs-lv will be used to store data for logs.  
  
 > sudo lvcreate -n apps-lv -L 14G webdata-vg  
 > sudo lvcreate -n logs-lv -L 14G webdata-vg  
+
 ![Screenshot_20230109_093025](https://user-images.githubusercontent.com/105195327/211266999-cd32e28d-7c6d-4cf1-a076-3029ed6b94f5.png)    
+
   
 - Verify that your Logical Volume has been created successfully by running $\color{pink}{sudo\ lvs}$   
+
 ![Screenshot_20230109_093204](https://user-images.githubusercontent.com/105195327/211267457-053a5ed1-68d8-4761-a1ef-3a1b241d20fa.png)
 
    
@@ -142,6 +149,7 @@ Create **/home/recovery/logs** to store backup of log data
 - Mount **/var/log** on **logs-lv** logical volume.  
 > **Note** *All the existing data on /var/log will be deleted. That is why step 15 above is very
 important*  
+
 > sudo mount /dev/webdata-vg/logs-lv /var/log   
  
 - Restore log files back into **/var/log** directory
@@ -149,12 +157,38 @@ important*
  
 - Update `/etc/fstab` file so that the mount configuration will persist after restart of the server.
 
+## UPDATE THE `/ETC/FSTAB` FILE  
+The UUID of the device will be used to update the /etc/fstab file;
+> sudo blkid  
+![uuid](https://user-images.githubusercontent.com/105195327/211276105-7853834a-d18b-4576-a511-caf992d1730f.png)   
+
+> sudo vi /etc/fstab
+
+- Update /etc/fstab in this format using your own UUID and rememeber to remove the leading and ending quotes.    
+![Screenshot_20230109_103647](https://user-images.githubusercontent.com/105195327/211280246-9f630b77-5e1a-49de-b83a-5c0f396ecb21.png)   
+
+- Test the configuration and reload the daemon
+> sudo mount -a
+> sudo systemctl daemon-reload
+ 
+- Verify your setup by running df -h, output must look like this:  
+
+![Screenshot_20230109_104934](https://user-images.githubusercontent.com/105195327/211280718-ab376281-ea3e-421e-b828-0918422dad0b.png)   
+---
+### Step 2 - Prepare the Database Server  
+- Launch a second RedHat EC2 instance that will have a role – **‘DB Server’**  
+- Repeat the same steps as for the Web Server, but instead of apps-lv create db-lv and mount it to /db directory instead of /var/www/html/.  
+
+### Step 3 — Install WordPress on your Web Server EC2  
 
 
-  
-  
-  
-  
+
+
+
+
+
+
+
   
   
   
