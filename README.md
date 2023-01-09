@@ -99,14 +99,69 @@ https://user-images.githubusercontent.com/105195327/211216013-97e0006b-8867-4328
 `sudo vgcreate webdata-vg /dev/xvdh1 /dev/xvdg1 /dev/xvdf1`  
   
 - Verify that your VG has been created successfully by running $\color{pink}{sudo\ vgs}$  
-  
+![Screenshot_20230109_092255](https://user-images.githubusercontent.com/105195327/211265844-775d7626-828f-44b6-b729-d9429e1aa6fc.png)   
 
-
-  
-
-  
-  
+- Use $\color{blue}{lvcreate}$ utility to create 2 logical volumes. **apps-lv (Use half of the PV size)**, and **logs-lv Use the remaining space of the PV size.** 
+> **NOTE** apps-lv will be used to store data for the Website while, logs-lv will be used to store data for logs.  
  
+> sudo lvcreate -n apps-lv -L 14G webdata-vg  
+> sudo lvcreate -n logs-lv -L 14G webdata-vg  
+![Screenshot_20230109_093025](https://user-images.githubusercontent.com/105195327/211266999-cd32e28d-7c6d-4cf1-a076-3029ed6b94f5.png)    
+  
+- Verify that your Logical Volume has been created successfully by running $\color{pink}{sudo\ lvs}$   
+![Screenshot_20230109_093204](https://user-images.githubusercontent.com/105195327/211267457-053a5ed1-68d8-4761-a1ef-3a1b241d20fa.png)
+
+   
+- Verify the entire setup  
+> sudo vgdisplay -v #view complete setup - VG, PV, and LV
+> sudo lsblk  
+  
+![Screenshot_20230109_093404](https://user-images.githubusercontent.com/105195327/211267509-07863d14-f141-4fc0-8354-886786c54289.png)   
+
+  
+- Use $\color{pink}{mkfs\.ext4}$ to format the logical volumes with $\color{blue}{ext4}$ filesystem   
+ 
+> sudo mkfs -t ext4 /dev/webdata-vg/apps-lv
+> sudo mkfs -t ext4 /dev/webdata-vg/logs-lv
+
+![Screenshot_20230109_093734](https://user-images.githubusercontent.com/105195327/211267936-88da5529-2698-404c-b83b-4ee68f768e00.png)    
+
+- Create /var/www/html directory to store website files    
+> `sudo mkdir -p /var/www/html` 
+  
+Create **/home/recovery/logs** to store backup of log data
+> `sudo mkdir -p /home/recovery/logs`  
+  
+- Mount /var/www/html on apps-lv logical volume
+> `sudo mount /dev/webdata-vg/apps-lv /var/www/html/`
+ 
+- Use $\color{blue}{rsync}$ utility to back up all the files in the log **directory /var/log** into **/home/recovery/logs** (This is required before mounting the file system)    
+? sudo rsync -av /var/log/. /home/recovery/logs/  
+  
+- Mount **/var/log** on **logs-lv** logical volume.  
+> **Note** *All the existing data on /var/log will be deleted. That is why step 15 above is very
+important*  
+> `sudo mount /dev/webdata-vg/logs-lv /var/log`  
+ 
+- Restore log files back into **/var/log** directory
+> `sudo rsync -av /home/recovery/logs/. /var/log`  
+ 
+- Update `/etc/fstab` file so that the mount configuration will persist after restart of the server.
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
 
 
