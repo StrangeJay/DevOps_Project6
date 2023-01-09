@@ -251,7 +251,7 @@ The UUID of the device will be used to update the /etc/fstab file;
 **Hint**: Do not forget to open MySQL port 3306 on DB Server EC2. For extra security, you shall allow access to the DB server **ONLY** from your Web Server’s IP address, so in the Inbound Rule configuration specify source as /32  
 ![Screenshot_20230109_123050](https://user-images.githubusercontent.com/105195327/211298986-9752aa6c-30b2-443a-8e3d-ee1b39cda240.png)  
 
-- Install MySQL client and test that you can connect from your Web Server to your DB server by using mysql-client.  
+- Install MySQL client and test that you can connect from your Web Server to your DB server by using $\color{pink}{mysql\-client}$.  
 `sudo yum install mysql`  
 `sudo mysql -u admin -p -h <DB-Server-Private-IP-address>`  
   
@@ -261,7 +261,8 @@ The UUID of the device will be used to update the /etc/fstab file;
   
 - Enable TCP port 80 in Inbound Rules configuration for your Web Server EC2 (enable from everywhere 0.0.0.0/0 or from your workstation’s IP)  
   
-- Try to access from your browser the link to your WordPress http://<Web-Server-Public-IP-Address>/wordpress/  
+- Try to access from your browser the link to your WordPress 
+`http://<Web-Server-Public-IP-Address>/wordpress/`  
 
 
 
