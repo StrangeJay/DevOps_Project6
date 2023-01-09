@@ -62,7 +62,7 @@ https://user-images.githubusercontent.com/105195327/211216013-97e0006b-8867-4328
  ![Screenshot_20230108_211932](https://user-images.githubusercontent.com/105195327/211217234-db369948-09a5-4f72-b99b-90446162fcca.png)  
 
 
-- Use $\color{pink}{gdisk} utility to create a single partition on each of the 3 disks  
+- Use $\color{pink}{gdisk}$ utility to create a single partition on each of the 3 disks  
  `sudo gdisk /dev/xvdf`   
   
 ![partition table](https://user-images.githubusercontent.com/105195327/211217510-f8b1c189-a033-4587-9003-f96508bac232.png)   
