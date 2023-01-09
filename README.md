@@ -88,9 +88,9 @@ Now, do the same for the remaining disks $\color{pink}{xvdh}$  `sudo gdisk /dev/
 > **Note**  Previously, in Ubuntu we used the `apt` command to install packages, in RedHat/CentOS a different package manager is used, so we shall use yum command instead.   
   
 - Use $\color{pink}{pvcreate}$ utility to mark each of 3 disks as physical volumes (PVs) to be used by LVM.  
-> sudo pvcreate /dev/xvdf1  
-> sudo pvcreate /dev/xvdg1  
-> sudo pvcreate /dev/xvdh1  
+`sudo pvcreate /dev/xvdf1`  
+`sudo pvcreate /dev/xvdg1`  
+`sudo pvcreate /dev/xvdh1`  
 
 ![Screenshot_20230108_220002](https://user-images.githubusercontent.com/105195327/211218824-e72e389d-e066-4616-88bc-b0edb05ac044.png)    
   
@@ -99,7 +99,7 @@ Now, do the same for the remaining disks $\color{pink}{xvdh}$  `sudo gdisk /dev/
 ![Screenshot_20230108_220022](https://user-images.githubusercontent.com/105195327/211218843-30e830b2-7487-4a4b-909d-7c0047ba80b7.png)   
 
 - Use $\color{blue}{vgcreate}$ utility to add all 3 PVs to a volume group (VG). Name the VG **webdata-vg**   
-> sudo vgcreate webdata-vg /dev/xvdh1 /dev/xvdg1 /dev/xvdf1   
+`sudo vgcreate webdata-vg /dev/xvdh1 /dev/xvdg1 /dev/xvdf1`   
   
 - Verify that your VG has been created successfully by running $\color{pink}{sudo\ vgs}$  
 
@@ -109,8 +109,8 @@ Now, do the same for the remaining disks $\color{pink}{xvdh}$  `sudo gdisk /dev/
 
 > **NOTE** apps-lv will be used to store data for the Website while, logs-lv will be used to store data for logs.  
  
-> sudo lvcreate -n apps-lv -L 14G webdata-vg  
-> sudo lvcreate -n logs-lv -L 14G webdata-vg  
+`sudo lvcreate -n apps-lv -L 14G webdata-vg`  
+`sudo lvcreate -n logs-lv -L 14G webdata-vg`  
 
 ![Screenshot_20230109_093025](https://user-images.githubusercontent.com/105195327/211266999-cd32e28d-7c6d-4cf1-a076-3029ed6b94f5.png)    
 
@@ -121,56 +121,56 @@ Now, do the same for the remaining disks $\color{pink}{xvdh}$  `sudo gdisk /dev/
 
    
 - Verify the entire setup  
-> sudo vgdisplay -v #view complete setup - VG, PV, and LV
-> sudo lsblk  
+`sudo vgdisplay -v #view complete setup - VG, PV, and LV`   
+`sudo lsblk`  
   
 ![Screenshot_20230109_093404](https://user-images.githubusercontent.com/105195327/211267509-07863d14-f141-4fc0-8354-886786c54289.png)   
 
   
 - Use $\color{pink}{mkfs\.ext4}$ to format the logical volumes with $\color{blue}{ext4}$ filesystem   
  
-> sudo mkfs -t ext4 /dev/webdata-vg/apps-lv
-> sudo mkfs -t ext4 /dev/webdata-vg/logs-lv
+`sudo mkfs -t ext4 /dev/webdata-vg/apps-lv`  
+`sudo mkfs -t ext4 /dev/webdata-vg/logs-lv`  
 
 ![Screenshot_20230109_093734](https://user-images.githubusercontent.com/105195327/211267936-88da5529-2698-404c-b83b-4ee68f768e00.png)    
 
 - Create /var/www/html directory to store website files    
-> sudo mkdir -p /var/www/html  
+`sudo mkdir -p /var/www/html`  
   
 Create **/home/recovery/logs** to store backup of log data
-> sudo mkdir -p /home/recovery/logs   
+`sudo mkdir -p /home/recovery/logs`   
   
 - Mount /var/www/html on apps-lv logical volume
-> sudo mount /dev/webdata-vg/apps-lv /var/www/html/
+`sudo mount /dev/webdata-vg/apps-lv /var/www/html/`   
  
 - Use $\color{blue}{rsync}$ utility to back up all the files in the log **directory /var/log** into **/home/recovery/logs** (This is required before mounting the file system)    
-> sudo rsync -av /var/log/. /home/recovery/logs/   
+`sudo rsync -av /var/log/. /home/recovery/logs/`   
   
 - Mount **/var/log** on **logs-lv** logical volume.  
 > **Note** All the existing data on /var/log will be deleted. That is why step 15 above is very
 important 
 
-> sudo mount /dev/webdata-vg/logs-lv /var/log   
+`sudo mount /dev/webdata-vg/logs-lv /var/log`   
  
 - Restore log files back into **/var/log** directory
-> sudo rsync -av /home/recovery/logs/. /var/log   
+`sudo rsync -av /home/recovery/logs/. /var/log`   
  
 - Update `/etc/fstab` file so that the mount configuration will persist after restart of the server.
 
 ## UPDATE THE `/ETC/FSTAB` FILE  
 The UUID of the device will be used to update the /etc/fstab file;  
-> sudo blkid  
+`sudo blkid`  
 
 ![uuid](https://user-images.githubusercontent.com/105195327/211276105-7853834a-d18b-4576-a511-caf992d1730f.png)   
 
-> sudo vi /etc/fstab
+`sudo vi /etc/fstab`   
 
 - Update /etc/fstab in this format using your own UUID and rememeber to remove the leading and ending quotes.    
 ![Screenshot_20230109_103647](https://user-images.githubusercontent.com/105195327/211280246-9f630b77-5e1a-49de-b83a-5c0f396ecb21.png)   
 
 - Test the configuration and reload the daemon
-> sudo mount -a
-> sudo systemctl daemon-reload
+`sudo mount -a`   
+`sudo systemctl daemon-reload`   
  
 - Verify your setup by running df -h, output must look like this:  
 
@@ -184,14 +184,14 @@ The UUID of the device will be used to update the /etc/fstab file;
 
 ### Step 3 — Install WordPress on your Web Server EC2  
 - Update the repository  
-> sudo yum -y update  
+`sudo yum -y update`  
  
 - Install wget, Apache and it’s dependencies
-> sudo yum -y install wget httpd php php-mysqlnd php-fpm php-json  
+`sudo yum -y install wget httpd php php-mysqlnd php-fpm php-json`  
  
-- Start Apache
-> sudo systemctl enable httpd  
-> sudo systemctl start httpd  
+- Start Apache  
+`sudo systemctl enable httpd`  
+`sudo systemctl start httpd`  
 
 - To install PHP and its depemdencies
  
@@ -207,7 +207,7 @@ The UUID of the device will be used to update the /etc/fstab file;
 
 
 - Restart Apache 
-> sudo systemctl restart httpd  
+`sudo systemctl restart httpd`  
 
 - Download wordpress and copy wordpress to var/www/html  
  
@@ -227,14 +227,14 @@ The UUID of the device will be used to update the /etc/fstab file;
 > 	sudo setsebool -P httpd_can_network_connect_db 1  
 ---
 ### Step 4 — Install MySQL on your DB Server EC2   
-- > sudo yum update  
+- `sudo yum update`  
 
-- > sudo yum install mysql-server  
+- `sudo yum install mysql-server`  
 
 - Verify that the service is up and running by using `sudo systemctl status mysqld`, if it is not running, restart the service and enable it so it will be running even after reboot:  
 
-> sudo systemctl restart mysqld  
-> sudo systemctl enable mysqld  
+`sudo systemctl restart mysqld`  
+`sudo systemctl enable mysqld`  
 
 ![Screenshot_20230109_122342](https://user-images.githubusercontent.com/105195327/211297479-dda305a5-3518-4c95-bfba-05c7ab5a8e9e.png)   
 --- 
@@ -248,8 +248,20 @@ The UUID of the device will be used to update the /etc/fstab file;
 > exit  
 --- 
 ### Step 6 — Configure WordPress to connect to the remote database 
+**Hint**: Do not forget to open MySQL port 3306 on DB Server EC2. For extra security, you shall allow access to the DB server **ONLY** from your Web Server’s IP address, so in the Inbound Rule configuration specify source as /32  
+![Screenshot_20230109_123050](https://user-images.githubusercontent.com/105195327/211298986-9752aa6c-30b2-443a-8e3d-ee1b39cda240.png)  
 
-
+- Install MySQL client and test that you can connect from your Web Server to your DB server by using mysql-client.  
+`sudo yum install mysql`  
+`sudo mysql -u admin -p -h <DB-Server-Private-IP-address>`  
+  
+- Verify if you can successfully execute $\color{pink}{SHOW\ DATABASES;}$ command and see a list of existing databases.  
+  
+- Change permissions and configuration so Apache could use WordPress:  
+  
+- Enable TCP port 80 in Inbound Rules configuration for your Web Server EC2 (enable from everywhere 0.0.0.0/0 or from your workstation’s IP)  
+  
+- Try to access from your browser the link to your WordPress http://<Web-Server-Public-IP-Address>/wordpress/  
 
 
 
