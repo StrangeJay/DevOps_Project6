@@ -180,7 +180,7 @@ The UUID of the device will be used to update the /etc/fstab file;
 - Launch a second RedHat EC2 instance that will have a role – **‘DB Server’**  
 - Repeat the same steps as for the Web Server, but instead of apps-lv create db-lv and mount it to /db directory instead of /var/www/html/.  
 ![Screenshot_20230109_114905](https://user-images.githubusercontent.com/105195327/211291204-650a941e-71d9-448b-aa72-e463007ab796.png)   
-
+---
 
 ### Step 3 — Install WordPress on your Web Server EC2  
 - Update the repository  
@@ -216,8 +216,8 @@ The UUID of the device will be used to update the /etc/fstab file;
 >   sudo wget http://wordpress.org/latest.tar.gz  
 >   sudo tar xzvf latest.tar.gz  
 >   sudo rm -rf latest.tar.gz  
->   cp wordpress/wp-config-sample.php wordpress/wp-config.php  
->   cp -R wordpress /var/www/html/  
+>   sudo cp wordpress/wp-config-sample.php wordpress/wp-config.php  
+>   sudo cp -R wordpress /var/www/html/  
  
 - Configure SELinux Policies  
  
@@ -225,6 +225,19 @@ The UUID of the device will be used to update the /etc/fstab file;
 >   sudo chcon -t httpd_sys_rw_content_t /var/www/html/wordpress -R  
 >   sudo setsebool -P httpd_can_network_connect=1  
 > 	sudo setsebool -P httpd_can_network_connect_db 1  
+---
+### Step 4 — Install MySQL on your DB Server EC2   
+- > sudo yum update  
+
+- > sudo yum install mysql-server  
+
+- Verify that the service is up and running by using `sudo systemctl status mysqld`, if it is not running, restart the service and enable it so it will be running even after reboot:  
+
+> sudo systemctl restart mysqld  
+> sudo systemctl enable mysqld  
+![Screenshot_20230109_122342](https://user-images.githubusercontent.com/105195327/211297479-dda305a5-3518-4c95-bfba-05c7ab5a8e9e.png)   
+--- 
+### Step 5 — Configure DB to work with WordPress
 
 
 
