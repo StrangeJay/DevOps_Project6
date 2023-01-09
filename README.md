@@ -35,8 +35,9 @@ Use $\color{pink}{RedHat}$ OS for this project
 
 If uou've forgotten how to spin an EC2 instance, please refer to [Project 2](https://github.com/StrangeJay/DevOps-Project2). 
 
-In previous projects we used ‘Ubuntu’, but it is better to be well-versed with various Linux distributions, thus, for this projects we will use very popular distribution called ‘RedHat’ (it also has a fully compatible derivative – CentOS)
-> **Note** for Ubuntu server, when connecting to it via SSH/Putty or any other tool, we used $\color{pink}{ubuntu}$ user, but for RedHat you will need to use $\color{pink}{ec2-user}$ user. Connection string will look like $\color{pink}{ec2-user@<Public-IP>}$
+In previous projects we used ‘Ubuntu’, but it is better to be well-versed with various Linux distributions, thus, for this projects we will use very popular distribution called ‘RedHat’ (it also has a fully compatible derivative – CentOS)  
+
+**Note:** for Ubuntu server, when connecting to it via SSH/Putty or any other tool, we used $\color{pink}{ubuntu}$ user, but for RedHat you will need to use $\color{pink}{ec2-user}$ user. Connection string will look like `ec2-user@<Public-IP>`
 Let us get started!  
 ---
 ## LAUNCH AN EC2 INSTANCE THAT WILL SERVE AS “WEB SERVER” 
@@ -55,7 +56,7 @@ https://user-images.githubusercontent.com/105195327/211216013-97e0006b-8867-4328
  ![Screenshot_20230108_211409](https://user-images.githubusercontent.com/105195327/211217066-073f89f8-d9a8-4fde-8488-cfa9856709e0.png)  
   
  Notice names of your newly created devices. All devices in Linux reside in /dev/ directory. Inspect it with ls /dev/ and make sure you see all 3 newly created block devices there – their names will likely be $\color{pink}{xvdf\, xvdh\, xvdg}$.  
-  ![Screenshot 2023-01-08 211523](https://user-images.githubusercontent.com/105195327/211217224-61ea2d8e-c1fd-4394-ae58-9343e1710f01.png)  
+![Screenshot 2023-01-08 211523](https://user-images.githubusercontent.com/105195327/211217224-61ea2d8e-c1fd-4394-ae58-9343e1710f01.png)  
 
 - Use `df -h` command to see all mounts and free space on your server  
  ![Screenshot_20230108_211932](https://user-images.githubusercontent.com/105195327/211217234-db369948-09a5-4f72-b99b-90446162fcca.png)  
@@ -84,7 +85,7 @@ https://user-images.githubusercontent.com/105195327/211216013-97e0006b-8867-4328
   
 ![Screenshot_20230108_215532](https://user-images.githubusercontent.com/105195327/211218651-ec07369d-f886-4d4d-8b63-020bdceaefe1.png)   
 
-> **Note**  Previously, in Ubuntu we used $\color{pink}{apt}$ command to install packages, in RedHat/CentOS a different package manager is used, so we shall use yum command instead.   
+> **Note**  Previously, in Ubuntu we used the `apt` command to install packages, in RedHat/CentOS a different package manager is used, so we shall use yum command instead.   
   
 - Use $\color{pink}{pvcreate}$ utility to mark each of 3 disks as physical volumes (PVs) to be used by LVM.  
 > sudo pvcreate /dev/xvdf1  
@@ -96,12 +97,12 @@ https://user-images.githubusercontent.com/105195327/211216013-97e0006b-8867-4328
 ![Screenshot_20230108_220022](https://user-images.githubusercontent.com/105195327/211218843-30e830b2-7487-4a4b-909d-7c0047ba80b7.png)   
 
 - Use $\color{blue}{vgcreate}$ utility to add all 3 PVs to a volume group (VG). Name the VG **webdata-vg**   
-`sudo vgcreate webdata-vg /dev/xvdh1 /dev/xvdg1 /dev/xvdf1`  
+> sudo vgcreate webdata-vg /dev/xvdh1 /dev/xvdg1 /dev/xvdf1   
   
 - Verify that your VG has been created successfully by running $\color{pink}{sudo\ vgs}$  
 ![Screenshot_20230109_092255](https://user-images.githubusercontent.com/105195327/211265844-775d7626-828f-44b6-b729-d9429e1aa6fc.png)   
 
-- Use $\color{blue}{lvcreate}$ utility to create 2 logical volumes. **apps-lv (Use half of the PV size)**, and **logs-lv Use the remaining space of the PV size.** 
+- Use $\color{blue}{lvcreate}$ utility to create 2 logical volumes. **apps-lv (Use half of the PV size)**, and **logs-lv Use the remaining space of the PV size.**  
 > **NOTE** apps-lv will be used to store data for the Website while, logs-lv will be used to store data for logs.  
  
 > sudo lvcreate -n apps-lv -L 14G webdata-vg  
@@ -127,24 +128,24 @@ https://user-images.githubusercontent.com/105195327/211216013-97e0006b-8867-4328
 ![Screenshot_20230109_093734](https://user-images.githubusercontent.com/105195327/211267936-88da5529-2698-404c-b83b-4ee68f768e00.png)    
 
 - Create /var/www/html directory to store website files    
-> `sudo mkdir -p /var/www/html` 
+> sudo mkdir -p /var/www/html  
   
 Create **/home/recovery/logs** to store backup of log data
-> `sudo mkdir -p /home/recovery/logs`  
+> sudo mkdir -p /home/recovery/logs   
   
 - Mount /var/www/html on apps-lv logical volume
-> `sudo mount /dev/webdata-vg/apps-lv /var/www/html/`
+> sudo mount /dev/webdata-vg/apps-lv /var/www/html/
  
 - Use $\color{blue}{rsync}$ utility to back up all the files in the log **directory /var/log** into **/home/recovery/logs** (This is required before mounting the file system)    
-? sudo rsync -av /var/log/. /home/recovery/logs/  
+> sudo rsync -av /var/log/. /home/recovery/logs/   
   
 - Mount **/var/log** on **logs-lv** logical volume.  
 > **Note** *All the existing data on /var/log will be deleted. That is why step 15 above is very
 important*  
-> `sudo mount /dev/webdata-vg/logs-lv /var/log`  
+> sudo mount /dev/webdata-vg/logs-lv /var/log   
  
 - Restore log files back into **/var/log** directory
-> `sudo rsync -av /home/recovery/logs/. /var/log`  
+> sudo rsync -av /home/recovery/logs/. /var/log   
  
 - Update `/etc/fstab` file so that the mount configuration will persist after restart of the server.
 
