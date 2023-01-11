@@ -1,30 +1,30 @@
 # WEB SOLUTION WITH WORDPRESS 
 
-You are progressing in practicing to implement web solutions using different technologies. As a DevOps engineer you will most probably encounter [PHP](https://www.php.net/)-based solutions since, even in 2021, it is the dominant web programming language used by more websites than any other programming language.
-In this project you will be tasked to prepare storage infrastructure on two Linux servers and implement a basic web solution using [WordPress](https://en.wikipedia.org/wiki/WordPress). WordPress is a free and open-source content management system written in **PHP** and paired with **MySQL** or **MariaDB** as its backend Relational Database Management System (RDBMS).  
+You are progressing in practicing implementing web solutions using different technologies. As a DevOps engineer you will most probably encounter [PHP](https://www.php.net/)-based solutions since, even in 2021, it is the dominant web programming language used by more websites than any other programming language.
+In this project, you will be tasked to prepare storage infrastructure on two Linux servers and implement a basic web solution using [WordPress](https://en.wikipedia.org/wiki/WordPress). WordPress is a free and open-source content management system written in **PHP** and paired with **MySQL** or **MariaDB** as its backend Relational Database Management System (RDBMS).  
 
 Project 6 consists of two parts:  
-1. Configure storage subsystem for Web and Database servers based on Linux OS. The focus of this part is to give you practical experience of working with disks, partitions and volumes in Linux.  
+1. Configure storage subsystem for Web and Database servers based on Linux OS. The focus of this part is to give you practical experience in working with disks, partitions and volumes in Linux.  
 
-2. Install WordPress and connect it to a remote MySQL database server. This part of the project will solidify your skills of deploying Web and DB tiers of Web solution.  
+2. Install WordPress and connect it to a remote MySQL database server. This part of the project will solidify your skills in deploying Web and DB tiers of Web solutions.  
 
 
-As a DevOps engineer, your deep understanding of core components of web solutions and your ability to troubleshoot them will play an essential role in your further progress and development.  
+As a DevOps engineer, your deep understanding of the core components of web solutions and your ability to troubleshoot them will play an essential role in your further progress and development.  
 
 ## Three-tier Architecture  
-Generally, web, or mobile solutions are implemented based on what is called the **Three-tier Architecture.**
-Three-tier Architecture is a client-server software architecture pattern that comprise of 3 separate layers. Namely: The presentation layer, the Business layer and the data Access or Management Layer(DAL). 
+Generally, web or mobile solutions are implemented based on what is called the **Three-tier Architecture.**
+Three-tier Architecture is a client-server software architecture pattern that comprises 3 separate layers. Namely: The presentation layer, the Business layer and the data Access or Management Layer(DAL). 
 
 ![Screenshot_20230107_144555](https://user-images.githubusercontent.com/105195327/211153921-1e306de2-0cd2-47e0-ba37-730d4d85dfdc.png)
 
-1. **Presentation Layer (PL):** This is the user interface such as the client server or browser on your laptop.  
+1. **Presentation Layer (PL):** This is the user interface such as the client-server or browser on your laptop.  
 2. **Business Layer (BL):** This is the backend program that implements business logic. Application or Webserver  
 3. **Data Access or Management Layer (DAL):** This is the layer for computer data storage and data access. [Database Server](https://www.computerhope.com/jargon/d/database-server.htm) or File System Server such as [FTP server](https://titanftp.com/2018/09/11/what-is-an-ftp-server/), or [NFS Server](https://searchenterprisedesktop.techtarget.com/definition/Network-File-System).  
-In this project, you will have the hands-on experience that showcases **Three-tier Architecture** while also ensuring that the disk used to store files on the Linux servers are adequately partitioned and managed through programs such as $\color{pink}{gdisk}$ and $\color{pink}{LVM}$ respectively.
-You will be working working with several storage and disk management concepts, to have a better understanding, watch following video:  
+In this project, you will have the hands-on experience that showcases **Three-tier Architecture** while also ensuring that the disk used to store files on the Linux servers is adequately partitioned and managed through programs such as $\color{pink}{gdisk}$ and $\color{pink}{LVM}$ respectively.
+You will be working with several storage and disk management concepts, to have a better understanding, watch the following video:  
 [Disk management in Linux](https://darey.io/courses/step-12-logical-volume-management/lessons/lesson-1-storage-management/topic/create-linux-partitions-with-fdisk/)  
 
-> **Note** We are gradually introducing new AWS elements into our solutions, but do not be worried if you do not fully understand AWS Cloud Services yet, there are Cloud focused projects ahead where we will get into deep details of various Cloud concepts and technologies – not only AWS, but other Cloud Service Providers as well.  
+> **Note** We are gradually introducing new AWS elements into our solutions, but do not be worried if you do not fully understand AWS Cloud Services yet, there are Cloud-focused projects ahead where we will get into deep details of various Cloud concepts and technologies – not only AWS but other Cloud Service Providers as well.  
 
 ## Your 3-Tier Setup  
 1. A Laptop or PC to serve as a client
@@ -33,29 +33,29 @@ You will be working working with several storage and disk management concepts, t
 
 Use $\color{pink}{RedHat}$ OS for this project  
 
-If uou've forgotten how to spin an EC2 instance, please refer to [Project 2](https://github.com/StrangeJay/DevOps-Project2). 
+If you've forgotten how to spin an EC2 instance, please refer to [Project 2](https://github.com/StrangeJay/DevOps-Project2). 
 
-In previous projects we used ‘Ubuntu’, but it is better to be well-versed with various Linux distributions, thus, for this projects we will use very popular distribution called ‘RedHat’ (it also has a fully compatible derivative – CentOS)  
+In previous projects we used ‘Ubuntu’, but it is better to be well-versed with various Linux distributions, thus, for this project, we will use a very popular distribution called ‘RedHat’ (it also has a fully compatible derivative – CentOS)  
 
-> **Note:** for Ubuntu server, when connecting to it via SSH/Putty or any other tool, we used $\color{pink}{ubuntu}$ user, but for RedHat you will need to use $\color{pink}{ec2-user}$ user. Connection string will look like `ec2-user@<Public-IP>`
+> **Note:** For the Ubuntu server, when connecting to it via SSH/Putty or any other tool, we used an $\color{pink}{ubuntu}$ user, but for RedHat, you will need to use an $\color{pink}{ec2-user}$ user. The connection string will look like `ec2-user@<Public-IP>`
 Let us get started!  
 ---
-## LAUNCH AN EC2 INSTANCE THAT WILL SERVE AS “WEB SERVER” 
+## LAUNCH AN EC2 INSTANCE THAT WILL SERVE AS A “WEB SERVER” 
 
 ### Step 1 - Prepare a web server 
   
-- Launch an EC2 instance that will serve as "Web server". Create 3 volumes in the smae AZ as your Web Server EC2, each of 10GB.  
+- Launch an EC2 instance that will serve as a "Web server". Create 3 volumes in the same AZ as your Web Server EC2, each of 10GB.  
   
 Learn How to add an EBS volume to an EC2 instance [here](https://www.youtube.com/watch?v=HPXnXkBzIHw)   
   
 - Attach all three volumes one by one to your Web Server EC2 instance  
 https://user-images.githubusercontent.com/105195327/211216013-97e0006b-8867-4328-bd86-b2b6bbb9a391.mp4   
 
-- Open up the Linux terminal to begin configuration  
+- Open up the Linux terminal to begin the configuration  
 - Use lsblk command to inspect what block devices are attached to the server. 
  ![Screenshot_20230108_211409](https://user-images.githubusercontent.com/105195327/211217066-073f89f8-d9a8-4fde-8488-cfa9856709e0.png)  
   
- Notice names of your newly created devices. All devices in Linux reside in /dev/ directory. Inspect it with ls /dev/ and make sure you see all 3 newly created block devices there – their names will likely be $\color{pink}{xvdf\, xvdh\, xvdg}$.  
+ Notice the names of your newly created devices. All devices in Linux reside in /dev/ directory. Inspect it with ls /dev/ and make sure you see all 3 newly created block devices there – their names will likely be $\color{pink}{xvdf\, xvdh\, xvdg}$.  
 ![Screenshot 2023-01-08 211523](https://user-images.githubusercontent.com/105195327/211217224-61ea2d8e-c1fd-4394-ae58-9343e1710f01.png)  
 
 - Use `df -h` command to see all mounts and free space on your server  
@@ -87,7 +87,7 @@ Now, do the same for the remaining disks $\color{pink}{xvdh}$  `sudo gdisk /dev/
 
 > **Note**  Previously, in Ubuntu we used the `apt` command to install packages, in RedHat/CentOS a different package manager is used, so we shall use yum command instead.   
   
-- Use $\color{pink}{pvcreate}$ utility to mark each of 3 disks as physical volumes (PVs) to be used by LVM.  
+- Use $\color{pink}{pvcreate}$ utility to mark each of the 3 disks as physical volumes (PVs) to be used by LVM.  
 `sudo pvcreate /dev/xvdf1`  
 `sudo pvcreate /dev/xvdg1`  
 `sudo pvcreate /dev/xvdh1`  
@@ -137,7 +137,7 @@ Now, do the same for the remaining disks $\color{pink}{xvdh}$  `sudo gdisk /dev/
 - Create /var/www/html directory to store website files    
 `sudo mkdir -p /var/www/html`  
   
-Create **/home/recovery/logs** to store backup of log data
+Create **/home/recovery/logs** to store a backup of log data
 `sudo mkdir -p /home/recovery/logs`   
   
 - Mount /var/www/html on apps-lv logical volume
@@ -152,10 +152,10 @@ important
 
 `sudo mount /dev/webdata-vg/logs-lv /var/log`   
  
-- Restore log files back into **/var/log** directory
+- Restore log files into **/var/log** directory
 `sudo rsync -av /home/recovery/logs/. /var/log`   
  
-- Update `/etc/fstab` file so that the mount configuration will persist after restart of the server.
+- Update `/etc/fstab` file so that the mount configuration will persist after restarting  the server.
 
 ## UPDATE THE `/ETC/FSTAB` FILE  
 The UUID of the device will be used to update the /etc/fstab file;  
@@ -165,7 +165,7 @@ The UUID of the device will be used to update the /etc/fstab file;
 
 `sudo vi /etc/fstab`   
 
-- Update /etc/fstab in this format using your own UUID and rememeber to remove the leading and ending quotes.    
+- Update /etc/fstab in this format using your UUID and remember to remove the leading and ending quotes.    
 ![Screenshot_20230109_103647](https://user-images.githubusercontent.com/105195327/211280246-9f630b77-5e1a-49de-b83a-5c0f396ecb21.png)   
 
 - Test the configuration and reload the daemon
@@ -186,7 +186,7 @@ The UUID of the device will be used to update the /etc/fstab file;
 - Update the repository  
 `sudo yum -y update`  
  
-- Install wget, Apache and it’s dependencies
+- Install wget, Apache and its dependencies
 `sudo yum -y install wget httpd php php-mysqlnd php-fpm php-json`  
  
 - Start Apache  
@@ -246,19 +246,20 @@ The UUID of the device will be used to update the /etc/fstab file;
 > FLUSH PRIVILEGES;  
 > SHOW DATABASES;  
 > exit  
+  
 --- 
 ### Step 6 — Configure WordPress to connect to the remote database 
-**Hint**: Do not forget to open MySQL port 3306 on DB Server EC2. For extra security, you shall allow access to the DB server **ONLY** from your Web Server’s IP address, so in the Inbound Rule configuration specify source as /32  
+**Hint**: Do not forget to open MySQL port 3306 on DB Server EC2. For extra security, you shall allow access to the DB server **ONLY** from your Web Server’s IP address, so in the Inbound Rule configuration specify the source as /32  
 ![Screenshot_20230109_123050](https://user-images.githubusercontent.com/105195327/211298986-9752aa6c-30b2-443a-8e3d-ee1b39cda240.png)  
 
-- Install MySQL client and test that you can connect from your Web Server to your DB server by using $\color{pink}{mysql\-client}$.  
+- Install the MySQL client and test that you can connect from your Web Server to your DB server by using $\color{pink}{mysql\-client}$.  
 `sudo yum install mysql`  
 `sudo mysql -u admin -p -h <DB-Server-Private-IP-address>`  
   
 - Verify if you can successfully execute $\color{pink}{SHOW\ DATABASES;}$ command and see a list of existing databases.  
   
 - Change permissions and configuration so Apache could use WordPress:  
-  *try to figure this part out, it might be a little challenging, but will help you grow in your DevOps journey*  
+ *Try to figure this part out, it might be a little challenging but will help you grow in your DevOps journey*  
   
 - Enable TCP port 80 in Inbound Rules configuration for your Web Server EC2 (enable from everywhere 0.0.0.0/0 or from your workstation’s IP)  
   
@@ -286,7 +287,7 @@ The UUID of the device will be used to update the /etc/fstab file;
  > **Warning** Do not forget to STOP your EC2 instances after completion of the project to avoid extra costs.   
 ---
 # **CONGRATULATIONS!!!**  
-You have learned how to configure Linux storage subsystem and have also deployed a full-scale Web Solution using WordPress CMS and MySQL RDBMS!
+You have learned how to configure the Linux storage subsystem and have also deployed a full-scale Web Solution using WordPress CMS and MySQL RDBMS!
 
 
 
