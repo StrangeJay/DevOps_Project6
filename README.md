@@ -286,7 +286,7 @@ The UUID of the device will be used to update the /etc/fstab file;
  > **Warning** Do not forget to STOP your EC2 instances after completion of the project to avoid extra costs.   
 ---
 # **CONGRATULATIONS!!!**  
-You have learned how to configure Linux storage susbystem and have also deployed a full-scale Web Solution using WordPress CMS and MySQL RDBMS!
+You have learned how to configure Linux storage subsystem and have also deployed a full-scale Web Solution using WordPress CMS and MySQL RDBMS!
 
 
 
