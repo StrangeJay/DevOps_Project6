@@ -258,13 +258,35 @@ The UUID of the device will be used to update the /etc/fstab file;
 - Verify if you can successfully execute $\color{pink}{SHOW\ DATABASES;}$ command and see a list of existing databases.  
   
 - Change permissions and configuration so Apache could use WordPress:  
+  *try to figure this part out, it might be a little challenging, but will help you grow in your DevOps journey*  
   
 - Enable TCP port 80 in Inbound Rules configuration for your Web Server EC2 (enable from everywhere 0.0.0.0/0 or from your workstation’s IP)  
+  
+- Setup your credentials in your wp-config.php file.  
+![Screenshot_20230111_013707](https://user-images.githubusercontent.com/105195327/211691120-4dba561d-eb74-4916-aede-613b21612587.png)  
+- restart httpd `sudo systemctl restart httpd`  
+  
+- disable the default page of apache so that you can view the wordpress page on the internet  
+`sudo mv /etc/httpd/conf.d/welcome.conf /etc/httpd/conf.d/welcome.conf_backup`   
+  
+- Restart httpd  
+`sudo systemctl restart httpd`   
   
 - Try to access from your browser the link to your WordPress 
 `http://<Web-Server-Public-IP-Address>/wordpress/`  
 
+  ![Screenshot_20230111_013019](https://user-images.githubusercontent.com/105195327/211691609-085d16fe-4972-4a40-b786-3ff562885c58.png)   
+- Setup your credentials  
+  
+![Screenshot_20230111_013206](https://user-images.githubusercontent.com/105195327/211691665-c2f84169-fcc9-40aa-9fe5-305387fdf570.png)
 
+- Log into your account   
+  
+![Screenshot_20230111_013302](https://user-images.githubusercontent.com/105195327/211691712-e6b2a5eb-1d75-47ac-9a51-2148e9be7e1b.png)   
+ > **Warning** Do not forget to STOP your EC2 instances after completion of the project to avoid extra costs.   
+---
+# **CONGRATULATIONS!!!**  
+You have learned how to configure Linux storage susbystem and have also deployed a full-scale Web Solution using WordPress CMS and MySQL RDBMS!
 
 
 
