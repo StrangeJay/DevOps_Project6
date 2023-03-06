@@ -20,7 +20,7 @@ Three-tier Architecture is a client-server software architecture pattern that co
 1. **Presentation Layer (PL):** This is the user interface such as the client-server or browser on your laptop.  
 2. **Business Layer (BL):** This is the backend program that implements business logic. Application or Webserver  
 3. **Data Access or Management Layer (DAL):** This is the layer for computer data storage and data access. [Database Server](https://www.computerhope.com/jargon/d/database-server.htm) or File System Server such as [FTP server](https://titanftp.com/2018/09/11/what-is-an-ftp-server/), or [NFS Server](https://searchenterprisedesktop.techtarget.com/definition/Network-File-System).  
-In this project, you will have the hands-on experience that showcases **Three-tier Architecture** while also ensuring that the disk used to store files on the Linux servers is adequately partitioned and managed through programs such as $\color{pink}{gdisk}$ and $\color{pink}{LVM}$ respectively.
+In this project, you will have the hands-on experience that showcases **Three-tier Architecture** while also ensuring that the disk used to store files on the Linux servers is adequately partitioned and managed through programs such as **gdisk** and **LVM** respectively.
 You will be working with several storage and disk management concepts, to have a better understanding, watch the following video:  
 [Disk management in Linux](https://darey.io/courses/step-12-logical-volume-management/lessons/lesson-1-storage-management/topic/create-linux-partitions-with-fdisk/)  
 
@@ -31,13 +31,13 @@ You will be working with several storage and disk management concepts, to have a
 2. An EC2 Linux Server as a web server (This is where you will install WordPress)
 3. An EC2 Linux server as a database (DB) server  
 
-Use $\color{pink}{RedHat}$ OS for this project  
+Use **RedHat** OS for this project  
 
 If you've forgotten how to spin an EC2 instance, please refer to [Project 2](https://github.com/StrangeJay/DevOps-Project2). 
 
 In previous projects we used ‘Ubuntu’, but it is better to be well-versed with various Linux distributions, thus, for this project, we will use a very popular distribution called ‘RedHat’ (it also has a fully compatible derivative – CentOS)  
 
-> **Note:** For the Ubuntu server, when connecting to it via SSH/Putty or any other tool, we used an $\color{pink}{ubuntu}$ user, but for RedHat, you will need to use an $\color{pink}{ec2-user}$ user. The connection string will look like `ec2-user@<Public-IP>`
+> **Note:** For the Ubuntu server, when connecting to it via SSH/Putty or any other tool, we used an $\color{pink}{ubuntu}$ user, but for RedHat, you will need to use an **ec2-user** user. The connection string will look like `ec2-user@<Public-IP>`
 Let us get started!  
 ---
 ## LAUNCH AN EC2 INSTANCE THAT WILL SERVE AS A “WEB SERVER” 
@@ -55,14 +55,14 @@ https://user-images.githubusercontent.com/105195327/211216013-97e0006b-8867-4328
 - Use lsblk command to inspect what block devices are attached to the server. 
  ![Screenshot_20230108_211409](https://user-images.githubusercontent.com/105195327/211217066-073f89f8-d9a8-4fde-8488-cfa9856709e0.png)  
   
- Notice the names of your newly created devices. All devices in Linux reside in /dev/ directory. Inspect it with ls /dev/ and make sure you see all 3 newly created block devices there – their names will likely be $\color{pink}{xvdf\, xvdh\, xvdg}$.  
+ Notice the names of your newly created devices. All devices in Linux reside in /dev/ directory. Inspect it with ls /dev/ and make sure you see all 3 newly created block devices there – their names will likely be **xvdf**, **xvdh**, **xvdg**.  
 ![Screenshot 2023-01-08 211523](https://user-images.githubusercontent.com/105195327/211217224-61ea2d8e-c1fd-4394-ae58-9343e1710f01.png)  
 
 - Use `df -h` command to see all mounts and free space on your server  
  ![Screenshot_20230108_211932](https://user-images.githubusercontent.com/105195327/211217234-db369948-09a5-4f72-b99b-90446162fcca.png)  
 
 
-- Use $\color{pink}{gdisk}$ utility to create a single partition on each of the 3 disks  
+- Use **gdisk** utility to create a single partition on each of the 3 disks  
  `sudo gdisk /dev/xvdf`   
   
 ![partition table](https://user-images.githubusercontent.com/105195327/211217510-f8b1c189-a033-4587-9003-f96508bac232.png)   
@@ -76,36 +76,36 @@ https://user-images.githubusercontent.com/105195327/211216013-97e0006b-8867-4328
   
 ![Screenshot_20230108_212744](https://user-images.githubusercontent.com/105195327/211217535-ab1bbe84-6878-4b20-b791-1b2624ee7a3a.png)   
 
-Now, do the same for the remaining disks $\color{pink}{xvdh}$  `sudo gdisk /dev/xvdh` and  $\color{pink}{xvdg}$  `sudo gdisk /dev/xvdg`  
+Now, do the same for the remaining disks **xvdh**  `sudo gdisk /dev/xvdh` and **xvdg**  `sudo gdisk /dev/xvdg`  
 
-- Use $\color{pink}{lsblk}$ utility to view the newly configured partition on each of the 3 disks.   
+- Use **lsblk** utility to view the newly configured partition on each of the 3 disks.   
 ![Screenshot_20230108_215255](https://user-images.githubusercontent.com/105195327/211218563-0579e37e-59c6-4874-9faa-403b3ba826f9.png)   
 
-- Install $\color{blue}{lvm2}$ package using `sudo yum install lvm2`. Run sudo lvmdiskscan command to check for available partitions.   
+- Install **lvm2** package using `sudo yum install lvm2`. Run sudo lvmdiskscan command to check for available partitions.   
   
 ![Screenshot_20230108_215532](https://user-images.githubusercontent.com/105195327/211218651-ec07369d-f886-4d4d-8b63-020bdceaefe1.png)   
 
 > **Note**  Previously, in Ubuntu we used the `apt` command to install packages, in RedHat/CentOS a different package manager is used, so we shall use yum command instead.   
   
-- Use $\color{pink}{pvcreate}$ utility to mark each of the 3 disks as physical volumes (PVs) to be used by LVM.  
+- Use **pvcreate** utility to mark each of the 3 disks as physical volumes (PVs) to be used by LVM.  
 `sudo pvcreate /dev/xvdf1`  
 `sudo pvcreate /dev/xvdg1`  
 `sudo pvcreate /dev/xvdh1`  
 
 ![Screenshot_20230108_220002](https://user-images.githubusercontent.com/105195327/211218824-e72e389d-e066-4616-88bc-b0edb05ac044.png)    
   
-- Verify that your Physical volume has been created successfully by running $\color{pink}{sudo\ pvs}$  
+- Verify that your Physical volume has been created successfully by running **sudo pvs**  
 
 ![Screenshot_20230108_220022](https://user-images.githubusercontent.com/105195327/211218843-30e830b2-7487-4a4b-909d-7c0047ba80b7.png)   
 
-- Use $\color{blue}{vgcreate}$ utility to add all 3 PVs to a volume group (VG). Name the VG **webdata-vg**   
+- Use **vgcreate** utility to add all 3 PVs to a volume group (VG). Name the VG **webdata-vg**   
 `sudo vgcreate webdata-vg /dev/xvdh1 /dev/xvdg1 /dev/xvdf1`   
   
-- Verify that your VG has been created successfully by running $\color{pink}{sudo\ vgs}$  
+- Verify that your VG has been created successfully by running **sudo vgs**  
 
 ![Screenshot_20230109_092255](https://user-images.githubusercontent.com/105195327/211265844-775d7626-828f-44b6-b729-d9429e1aa6fc.png)   
 
-- Use $\color{blue}{lvcreate}$ utility to create 2 logical volumes. **apps-lv (Use half of the PV size)**, and **logs-lv Use the remaining space of the PV size.**  
+- Use **lvcreate** utility to create 2 logical volumes. **apps-lv (Use half of the PV size)**, and **logs-lv Use the remaining space of the PV size.**  
 
 > **NOTE** apps-lv will be used to store data for the Website while, logs-lv will be used to store data for logs.  
  
@@ -115,7 +115,7 @@ Now, do the same for the remaining disks $\color{pink}{xvdh}$  `sudo gdisk /dev/
 ![Screenshot_20230109_093025](https://user-images.githubusercontent.com/105195327/211266999-cd32e28d-7c6d-4cf1-a076-3029ed6b94f5.png)    
 
   
-- Verify that your Logical Volume has been created successfully by running $\color{pink}{sudo\ lvs}$   
+- Verify that your Logical Volume has been created successfully by running **sudo lvs** 
 
 ![Screenshot_20230109_093204](https://user-images.githubusercontent.com/105195327/211267457-053a5ed1-68d8-4761-a1ef-3a1b241d20fa.png)
 
@@ -127,7 +127,7 @@ Now, do the same for the remaining disks $\color{pink}{xvdh}$  `sudo gdisk /dev/
 ![Screenshot_20230109_093404](https://user-images.githubusercontent.com/105195327/211267509-07863d14-f141-4fc0-8354-886786c54289.png)   
 
   
-- Use $\color{pink}{mkfs\.ext4}$ to format the logical volumes with $\color{blue}{ext4}$ filesystem   
+- Use **mkfs -ext4** to format the logical volumes with **ext4** filesystem   
  
 `sudo mkfs -t ext4 /dev/webdata-vg/apps-lv`  
 `sudo mkfs -t ext4 /dev/webdata-vg/logs-lv`  
@@ -143,7 +143,7 @@ Create **/home/recovery/logs** to store a backup of log data
 - Mount /var/www/html on apps-lv logical volume
 `sudo mount /dev/webdata-vg/apps-lv /var/www/html/`   
  
-- Use $\color{blue}{rsync}$ utility to back up all the files in the log **directory /var/log** into **/home/recovery/logs** (This is required before mounting the file system)    
+- Use **rsync** utility to back up all the files in the log **directory /var/log** into **/home/recovery/logs** (This is required before mounting the file system)    
 `sudo rsync -av /var/log/. /home/recovery/logs/`   
   
 - Mount **/var/log** on **logs-lv** logical volume.  
@@ -252,11 +252,11 @@ The UUID of the device will be used to update the /etc/fstab file;
 **Hint**: Do not forget to open MySQL port 3306 on DB Server EC2. For extra security, you shall allow access to the DB server **ONLY** from your Web Server’s IP address, so in the Inbound Rule configuration specify the source as /32  
 ![Screenshot_20230109_123050](https://user-images.githubusercontent.com/105195327/211298986-9752aa6c-30b2-443a-8e3d-ee1b39cda240.png)  
 
-- Install the MySQL client and test that you can connect from your Web Server to your DB server by using $\color{pink}{mysql\-client}$.  
+- Install the MySQL client and test that you can connect from your Web Server to your DB server by using **mysql-client**.  
 `sudo yum install mysql`  
 `sudo mysql -u admin -p -h <DB-Server-Private-IP-address>`  
   
-- Verify if you can successfully execute $\color{pink}{SHOW\ DATABASES;}$ command and see a list of existing databases.  
+- Verify if you can successfully execute `SHOW  DATABASES;` command and see a list of existing databases.  
   
 - Change permissions and configuration so Apache could use WordPress:  
  *Try to figure this part out, it might be a little challenging but will help you grow in your DevOps journey*  
